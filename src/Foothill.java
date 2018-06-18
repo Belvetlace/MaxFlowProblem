@@ -28,13 +28,12 @@ public class Foothill
       myG.setStartVert("s");
       myG.setEndVert("t");
 
-      //System.out.println("test cost of edge dt: " + myG.testGetCostOfResEdge("d","t"));
-      //finalFlow = myG.findMaxFlow();
+      finalFlow = myG.findMaxFlow();
 
-      //System.out.println("Final flow: " + finalFlow);
+      System.out.println("Final flow: " + finalFlow);
 
-      //myG.showResAdjTable();
-      //myG.showFlowAdjTable();
+      myG.showResAdjTable();
+      myG.showFlowAdjTable();
    }
 }
 

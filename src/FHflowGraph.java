@@ -15,14 +15,34 @@ public class FHflowGraph<E>
    //mutators
    public boolean setStartVert(E x)
    {
-      this.startVert = new FHflowVertex<>(x);
-      return true;
+      FHflowVertex<E> start, temp = new FHflowVertex<>(x);
+      Iterator<FHflowVertex<E>> iter;
+      for (iter = vertexSet.iterator(); iter.hasNext(); )
+      {
+         start = iter.next();
+         if (start.equals(temp))
+         {
+            this.startVert = start;
+            return true;
+         }
+      }
+      return false;
    }
 
    public boolean setEndVert(E x)
    {
-      this.endVert = new FHflowVertex<>(x);
-      return true;
+      FHflowVertex<E> end, temp = new FHflowVertex<>(x);
+      Iterator<FHflowVertex<E>> iter;
+      for (iter = vertexSet.iterator(); iter.hasNext(); )
+      {
+         end = iter.next();
+         if (end.equals(temp))
+         {
+            this.endVert = end;
+            return true;
+         }
+      }
+      return false;
    }
 
    //adds vertices as before, but adjacency lists are handled as follows:
@@ -142,12 +162,16 @@ public class FHflowGraph<E>
    // Finally, the flow graph is probed to find the total flow for the functional return.
    public double findMaxFlow()
    {
+      double minCost;
       while (establishNextFlowPath())
       {
-         double minCost = getLimitingFlowOnResPath();
+         minCost = getLimitingFlowOnResPath();
+         System.out.println("minCost " + minCost);
          adjustPathByCost(minCost);
-
       }
+      // todo: flow graph is probed to find the total flow
+      // for the functional return.
+      // startVert in flowAdjList add all costs
 
       return .0;
    }
@@ -156,6 +180,7 @@ public class FHflowGraph<E>
    //todo:return true if the endVert was successfully reached and false, otherwise.
    private boolean establishNextFlowPath()
    {
+      System.out.println("\nin dijkstra--------------");
       FHflowVertex<E> w, v;
       Pair<FHflowVertex<E>, Double> edge;
       Iterator<FHflowVertex<E>> iter;
@@ -164,25 +189,25 @@ public class FHflowGraph<E>
       Deque<FHflowVertex<E>> partiallyProcessedVerts = new LinkedList<>();
 
       // initialize the vertex list and place the starting vert in p_p_v queue
-      for (iter = vertexSet.iterator(); iter.hasNext(); )
-         iter.next().dist = FHflowVertex.INFINITY;
-
-      startVert.dist = 0;
+//      for (iter = vertexSet.iterator(); iter.hasNext(); )
+//         iter.next().dist = FHflowVertex.INFINITY;
+//
+//      startVert.dist = 0;
+      System.out.println("startVert " + startVert.data);
+      System.out.println("endVert " + endVert.data);
+      //startVert.showResAdjList();
       partiallyProcessedVerts.addLast(startVert);
 
       // outer dijkstra loop
-      boolean reachedEnd = false;
-      while (!reachedEnd)
+      while (!partiallyProcessedVerts.isEmpty())
       {
          v = partiallyProcessedVerts.removeFirst();
          // Ends the loop as soon as it finds a path to endVert.
-         if (v.equals(endVert))
-         {
-            reachedEnd = true;
-         }
-         // for each vert adj to v, lower its dist to s if you can
          // todo: When traversing a newly popped v's adjacency lists,
          // skip edges with costVW == 0
+         edgeIter = v.resAdjList.iterator();
+         v.showResAdjList();
+         //System.out.println(edgeIter.);
          for (edgeIter = v.resAdjList.iterator(); edgeIter.hasNext(); )
          {
             edge = edgeIter.next();
@@ -190,29 +215,51 @@ public class FHflowGraph<E>
             costVW = edge.second;
             if (costVW != .0) // v.dist + costVW < w.dist
             {
-               w.dist = v.dist + costVW;
+               System.out.println("cost != 0");
+               //w.dist = v.dist + costVW;
                w.nextInPath = v;
-
                // w now has improved distance, so add w to PPV queue
                partiallyProcessedVerts.addLast(w);
             }
          }
+         System.out.println("v: " + v.data);
+         if (v.equals(endVert))
+         {
+            System.out.println("------end reached\n\n\n\n");
+            return true;
+         }
       }
-      return reachedEnd;
+      return false;
    }
 
    private double getLimitingFlowOnResPath()
    {
-      double minCost;
+      double minCost, currentCost;
       FHflowVertex<E> dst = endVert;
       FHflowVertex<E> src;
+      minCost = Double.MAX_VALUE;
       //traverse the path util startVert is reached
       do
       {
          src = dst.nextInPath;
-         minCost = getCostOfResEdge(src, dst);
+         currentCost = getCostOfResEdge(src, dst);
+         if (currentCost < minCost)
+         {
+            minCost = currentCost;
+         }
+         System.out.println("current minCost: " + minCost);
          dst = dst.nextInPath; // next step up the path
+         System.out.println("srs " + src.data);
+         src.showResAdjList();
+         System.out.println("startVert " + startVert.data);
+         startVert.showResAdjList();
+         if(src.equals(startVert))
+         {
+            System.out.println("limited flow: " + minCost);
+            return minCost;
+         }
       } while (!src.equals(startVert));
+
       return minCost;
    }
 
