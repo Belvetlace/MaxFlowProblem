@@ -1,6 +1,4 @@
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Stack;
+import java.util.*;
 
 import cs_1c.*;
 
@@ -116,9 +114,9 @@ public class FHflowGraph<E>
 
    public void showResAdjTable()
    {
-      Iterator< FHflowVertex<E> > iter;
+      Iterator<FHflowVertex<E>> iter;
 
-      System.out.println( "------------------------ ");
+      System.out.println("------------------------ ");
       for (iter = vertexSet.iterator(); iter.hasNext(); )
          (iter.next()).showResAdjList();
       System.out.println();
@@ -126,64 +124,168 @@ public class FHflowGraph<E>
 
    public void showFlowAdjTable()
    {
-      Iterator< FHflowVertex<E> > iter;
+      Iterator<FHflowVertex<E>> iter;
 
-      System.out.println( "------------------------ ");
+      System.out.println("------------------------ ");
       for (iter = vertexSet.iterator(); iter.hasNext(); )
          (iter.next()).showFlowAdjList();
       System.out.println();
    }
 
-
-   // the main public algorithm.
-   // (All the remaining algorithms are helpers and can be private.)
    // It returns the maximum flow found.
+   // loops, calling establishNextFlowPath()
+   // followed by getLimitingFlowOnResPath() and
+   // adjusts the residual and flow graphs using adjustPathByCost().
+   // When establishNextFlowPath() returns false
+   // (or adjustPathByCost() returns false
+   // or the limiting flow becomes 0, take your pick), the loop ends.
+   // Finally, the flow graph is probed to find the total flow for the functional return.
    public double findMaxFlow()
    {
+      while (establishNextFlowPath())
+      {
+         double minCost = getLimitingFlowOnResPath();
+         adjustPathByCost(minCost);
+
+      }
 
       return .0;
    }
 
-
-   //dijkstra() is used as a basis for
-   protected boolean establishNextFlowPath()
+   //dijkstra() is used as a basis
+   //todo:return true if the endVert was successfully reached and false, otherwise.
+   private boolean establishNextFlowPath()
    {
+      FHflowVertex<E> w, v;
+      Pair<FHflowVertex<E>, Double> edge;
+      Iterator<FHflowVertex<E>> iter;
+      Iterator<Pair<FHflowVertex<E>, Double>> edgeIter;
+      Double costVW;
+      Deque<FHflowVertex<E>> partiallyProcessedVerts = new LinkedList<>();
 
-      return true;
+      // initialize the vertex list and place the starting vert in p_p_v queue
+      for (iter = vertexSet.iterator(); iter.hasNext(); )
+         iter.next().dist = FHflowVertex.INFINITY;
+
+      startVert.dist = 0;
+      partiallyProcessedVerts.addLast(startVert);
+
+      // outer dijkstra loop
+      boolean reachedEnd = false;
+      while (!reachedEnd)
+      {
+         v = partiallyProcessedVerts.removeFirst();
+         // Ends the loop as soon as it finds a path to endVert.
+         if (v.equals(endVert))
+         {
+            reachedEnd = true;
+         }
+         // for each vert adj to v, lower its dist to s if you can
+         // todo: When traversing a newly popped v's adjacency lists,
+         // skip edges with costVW == 0
+         for (edgeIter = v.resAdjList.iterator(); edgeIter.hasNext(); )
+         {
+            edge = edgeIter.next();
+            w = edge.first;
+            costVW = edge.second;
+            if (costVW != .0) // v.dist + costVW < w.dist
+            {
+               w.dist = v.dist + costVW;
+               w.nextInPath = v;
+
+               // w now has improved distance, so add w to PPV queue
+               partiallyProcessedVerts.addLast(w);
+            }
+         }
+      }
+      return reachedEnd;
    }
 
-   protected double getLimitingFlowOnResPath()
+   private double getLimitingFlowOnResPath()
    {
+      double minCost;
+      FHflowVertex<E> dst = endVert;
+      FHflowVertex<E> src;
+      //traverse the path util startVert is reached
+      do
+      {
+         src = dst.nextInPath;
+         minCost = getCostOfResEdge(src, dst);
 
-      return .0;
+      } while (!src.equals(startVert));
+      return minCost;
    }
 
-   //adjusting the residual and flow graphs
-   protected boolean adjustPathByCost(double cost)
+   //todo: adjusting the residual and flow graphs
+   //flow += min cost
+   //res edge = cost - minCost
+   //  reverse edge = minCost
+   private boolean adjustPathByCost(double cost)
    {
-
-      return true;
+      FHflowVertex<E> src, w, dst = endVert;
+      Iterator<FHflowVertex<E>> iter;
+      Pair<FHflowVertex<E>, Double> edge;
+      src = dst.nextInPath;
+      iter = vertexSet.iterator();
+      while (!src.equals(startVert) && iter.hasNext())
+      {
+         w = iter.next();
+         boolean result1 = addCostToResEdge(src, dst, cost);
+         boolean result2 = addCostToFlowEdge(src, dst, cost);
+         return true;
+      }
+      return false;
    }
 
-   protected double getCostOfResEdge(FHflowVertex<E> src, FHflowVertex<E> dst)
+   private double getCostOfResEdge(FHflowVertex<E> src, FHflowVertex<E> dst)
    {
-
-      return .0;
+      Iterator<Pair<FHflowVertex<E>, Double>> iter;
+      Pair<FHflowVertex<E>, Double> edge;
+      //iterate src resAdjList until dst vertex is found, get its cost
+      for (iter = src.resAdjList.iterator(); iter.hasNext(); )
+      {
+         edge = iter.next();
+         if (edge.first.equals(dst))
+         {
+            return edge.second;
+         }
+      }
+      return 0;
    }
 
 
-   protected boolean addCostToResEdge(FHflowVertex<E> src,
+   private boolean addCostToResEdge(FHflowVertex<E> src,
                                       FHflowVertex<E> dst, double cost)
    {
-
-      return true;
+      Iterator<Pair<FHflowVertex<E>, Double>> iter;
+      Pair<FHflowVertex<E>, Double> edge;
+      for (iter = src.resAdjList.iterator(); iter.hasNext(); )
+      {
+         edge = iter.next();
+         if (edge.first.equals(dst))
+         {
+           edge.second = cost;
+            return true;
+         }
+      }
+      return false;
    }
 
-   protected boolean addCostToFlowEdge(FHflowVertex<E> src,
+   private boolean addCostToFlowEdge(FHflowVertex<E> src,
                                        FHflowVertex<E> dst, double cost)
    {
-
-      return true;
+      Iterator<Pair<FHflowVertex<E>, Double>> iter;
+      Pair<FHflowVertex<E>, Double> edge;
+      for (iter = src.flowAdjList.iterator(); iter.hasNext(); )
+      {
+         edge = iter.next();
+         if (edge.first.equals(dst))
+         {
+            edge.second = cost;
+            return true;
+         }
+      }
+      return false;
    }
 
 
