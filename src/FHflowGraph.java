@@ -211,30 +211,32 @@ public class FHflowGraph<E>
       {
          src = dst.nextInPath;
          minCost = getCostOfResEdge(src, dst);
-
+         dst = dst.nextInPath; // next step up the path
       } while (!src.equals(startVert));
       return minCost;
    }
 
    //todo: adjusting the residual and flow graphs
-   //flow += min cost
-   //res edge = cost - minCost
-   //  reverse edge = minCost
+   //flow += minCost
+   //residual edge -= minCost
+   // reverse edge += minCost
    private boolean adjustPathByCost(double cost)
    {
       FHflowVertex<E> src, w, dst = endVert;
-      Iterator<FHflowVertex<E>> iter;
-      Pair<FHflowVertex<E>, Double> edge;
-      src = dst.nextInPath;
-      iter = vertexSet.iterator();
-      while (!src.equals(startVert) && iter.hasNext())
+      double currentCost;
+      boolean result1, result2, result3;
+      do
       {
-         w = iter.next();
-         boolean result1 = addCostToResEdge(src, dst, cost);
-         boolean result2 = addCostToFlowEdge(src, dst, cost);
-         return true;
-      }
-      return false;
+         src = dst.nextInPath;
+         currentCost = getCostOfResEdge(src, dst);
+         result1 = addCostToResEdge(src, dst, currentCost - cost);
+         //reverse edge:
+         result2 = addCostToResEdge(dst, src, currentCost + cost);
+         currentCost = getCostOfFlowEdge(src, dst);
+         result3 = addCostToFlowEdge(src, dst, currentCost + cost);
+         dst = dst.nextInPath; // next step up the path
+      } while (!src.equals(startVert));
+      return (result1 && result2 && result3);
    }
 
    private double getCostOfResEdge(FHflowVertex<E> src, FHflowVertex<E> dst)
@@ -253,9 +255,25 @@ public class FHflowGraph<E>
       return 0;
    }
 
+   private double getCostOfFlowEdge(FHflowVertex<E> src, FHflowVertex<E> dst)
+   {
+      Iterator<Pair<FHflowVertex<E>, Double>> iter;
+      Pair<FHflowVertex<E>, Double> edge;
+      //iterate src resAdjList until dst vertex is found, get its cost
+      for (iter = src.flowAdjList.iterator(); iter.hasNext(); )
+      {
+         edge = iter.next();
+         if (edge.first.equals(dst))
+         {
+            return edge.second;
+         }
+      }
+      return 0;
+   }
+
 
    private boolean addCostToResEdge(FHflowVertex<E> src,
-                                      FHflowVertex<E> dst, double cost)
+                                    FHflowVertex<E> dst, double cost)
    {
       Iterator<Pair<FHflowVertex<E>, Double>> iter;
       Pair<FHflowVertex<E>, Double> edge;
@@ -264,7 +282,7 @@ public class FHflowGraph<E>
          edge = iter.next();
          if (edge.first.equals(dst))
          {
-           edge.second = cost;
+            edge.second = cost;
             return true;
          }
       }
@@ -272,7 +290,7 @@ public class FHflowGraph<E>
    }
 
    private boolean addCostToFlowEdge(FHflowVertex<E> src,
-                                       FHflowVertex<E> dst, double cost)
+                                     FHflowVertex<E> dst, double cost)
    {
       Iterator<Pair<FHflowVertex<E>, Double>> iter;
       Pair<FHflowVertex<E>, Double> edge;
