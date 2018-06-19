@@ -188,11 +188,11 @@ public class FHflowGraph<E>
       Double costVW;
       Deque<FHflowVertex<E>> partiallyProcessedVerts = new LinkedList<>();
 
-      // initialize the vertex list and place the starting vert in p_p_v queue
-//      for (iter = vertexSet.iterator(); iter.hasNext(); )
-//         iter.next().dist = FHflowVertex.INFINITY;
-//
-//      startVert.dist = 0;
+      // clear all nextInPath references
+      for (iter = vertexSet.iterator(); iter.hasNext(); )
+         iter.next().nextInPath = null;
+
+
       System.out.println("startVert " + startVert.data);
       System.out.println("endVert " + endVert.data);
       //startVert.showResAdjList();
@@ -205,30 +205,25 @@ public class FHflowGraph<E>
          // Ends the loop as soon as it finds a path to endVert.
          // todo: When traversing a newly popped v's adjacency lists,
          // skip edges with costVW == 0
-         edgeIter = v.resAdjList.iterator();
          v.showResAdjList();
-         //System.out.println(edgeIter.);
          for (edgeIter = v.resAdjList.iterator(); edgeIter.hasNext(); )
          {
             edge = edgeIter.next();
             w = edge.first;
             costVW = edge.second;
-            if (costVW != .0) // v.dist + costVW < w.dist
+            if (costVW != .0)
             {
-               System.out.println("cost != 0");
-               //w.dist = v.dist + costVW;
+               //System.out.println("cost != 0");
                w.nextInPath = v;
-               // w now has improved distance, so add w to PPV queue
                partiallyProcessedVerts.addLast(w);
-            }
-            //System.out.println("v: " + v.data);
-            if (v.equals(endVert))
-            {
-               System.out.println("------end reached\n\n\n\n");
-               return true;
+               System.out.println("v: " + v.data + "  w: " + w.data);
+               if (w.equals(endVert))
+               {
+                  System.out.println("------end reached\n\n\n\n");
+                  return true;
+               }
             }
          }
-
       }
       return false;
    }
@@ -240,6 +235,8 @@ public class FHflowGraph<E>
       FHflowVertex<E> src;
       minCost = Double.MAX_VALUE;
       //traverse the path util startVert is reached
+      System.out.println("startVert " + startVert.data);
+      startVert.showResAdjList();
       do
       {
          src = dst.nextInPath;
@@ -250,10 +247,8 @@ public class FHflowGraph<E>
          }
          System.out.println("current minCost: " + minCost);
          dst = dst.nextInPath; // next step up the path
-         System.out.println("srs " + src.data);
+         System.out.print("srs " + src.data + "  ");
          src.showResAdjList();
-         System.out.println("startVert " + startVert.data);
-         startVert.showResAdjList();
          if (src.equals(startVert))
          {
             System.out.println("limited flow: " + minCost);
@@ -270,6 +265,7 @@ public class FHflowGraph<E>
    // reverse edge += minCost
    private boolean adjustPathByCost(double cost)
    {
+      System.out.println("\nin adjustPathByCost");
       FHflowVertex<E> src, w, dst = endVert;
       double currentCost;
       boolean result1, result2, result3;
@@ -279,6 +275,7 @@ public class FHflowGraph<E>
          currentCost = getCostOfResEdge(src, dst);
          result1 = addCostToResEdge(src, dst, currentCost - cost);
          //reverse edge:
+         currentCost = getCostOfResEdge(dst, src);
          result2 = addCostToResEdge(dst, src, currentCost + cost);
          currentCost = getCostOfFlowEdge(src, dst);
          result3 = addCostToFlowEdge(src, dst, currentCost + cost);
