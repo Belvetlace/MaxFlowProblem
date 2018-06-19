@@ -162,7 +162,7 @@ public class FHflowGraph<E>
    // Finally, the flow graph is probed to find the total flow for the functional return.
    public double findMaxFlow()
    {
-      double minCost;
+      double minCost, maxFlow = .0;
       while (establishNextFlowPath())
       {
          minCost = getLimitingFlowOnResPath();
@@ -172,8 +172,14 @@ public class FHflowGraph<E>
       // todo: flow graph is probed to find the total flow
       // for the functional return.
       // startVert in flowAdjList add all costs
-
-      return .0;
+      Iterator<Pair<FHflowVertex<E>, Double>> iter;
+      Pair<FHflowVertex<E>, Double> pair;
+      for (iter = startVert.flowAdjList.iterator(); iter.hasNext();)
+      {
+         pair = iter.next();
+         maxFlow += pair.second;
+      }
+      return maxFlow;
    }
 
    //dijkstra() is used as a basis
