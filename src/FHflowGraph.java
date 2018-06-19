@@ -221,13 +221,14 @@ public class FHflowGraph<E>
                // w now has improved distance, so add w to PPV queue
                partiallyProcessedVerts.addLast(w);
             }
+            //System.out.println("v: " + v.data);
+            if (v.equals(endVert))
+            {
+               System.out.println("------end reached\n\n\n\n");
+               return true;
+            }
          }
-         System.out.println("v: " + v.data);
-         if (v.equals(endVert))
-         {
-            System.out.println("------end reached\n\n\n\n");
-            return true;
-         }
+
       }
       return false;
    }
@@ -253,7 +254,7 @@ public class FHflowGraph<E>
          src.showResAdjList();
          System.out.println("startVert " + startVert.data);
          startVert.showResAdjList();
-         if(src.equals(startVert))
+         if (src.equals(startVert))
          {
             System.out.println("limited flow: " + minCost);
             return minCost;
