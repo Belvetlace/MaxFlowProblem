@@ -152,14 +152,10 @@ public class FHflowGraph<E>
       System.out.println();
    }
 
-   // It returns the maximum flow found.
-   // loops, calling establishNextFlowPath()
-   // followed by getLimitingFlowOnResPath() and
+   // loops, calling establishNextFlowPath(), getLimitingFlowOnResPath()
    // adjusts the residual and flow graphs using adjustPathByCost().
-   // When establishNextFlowPath() returns false
-   // (or adjustPathByCost() returns false
-   // or the limiting flow becomes 0, take your pick), the loop ends.
-   // Finally, the flow graph is probed to find the total flow for the functional return.
+   // When establishNextFlowPath() returns false the loop ends.
+   // returns the maximum flow found.
    public double findMaxFlow()
    {
       double minCost, maxFlow = .0;
@@ -169,12 +165,10 @@ public class FHflowGraph<E>
          System.out.println("minCost " + minCost);
          adjustPathByCost(minCost);
       }
-      // todo: flow graph is probed to find the total flow
-      // for the functional return.
-      // startVert in flowAdjList add all costs
+
       Iterator<Pair<FHflowVertex<E>, Double>> iter;
       Pair<FHflowVertex<E>, Double> pair;
-      for (iter = startVert.flowAdjList.iterator(); iter.hasNext();)
+      for (iter = startVert.flowAdjList.iterator(); iter.hasNext(); )
       {
          pair = iter.next();
          maxFlow += pair.second;
@@ -183,7 +177,6 @@ public class FHflowGraph<E>
    }
 
    //dijkstra() is used as a basis
-   //todo:return true if the endVert was successfully reached and false, otherwise.
    private boolean establishNextFlowPath()
    {
       System.out.println("\nin dijkstra--------------");
@@ -209,7 +202,6 @@ public class FHflowGraph<E>
       {
          v = partiallyProcessedVerts.removeFirst();
          // Ends the loop as soon as it finds a path to endVert.
-         // todo: When traversing a newly popped v's adjacency lists,
          // skip edges with costVW == 0
          v.showResAdjList();
          for (edgeIter = v.resAdjList.iterator(); edgeIter.hasNext(); )
@@ -219,8 +211,10 @@ public class FHflowGraph<E>
             costVW = edge.second;
             if (costVW != .0)
             {
-               //System.out.println("cost != 0");
-               w.nextInPath = v;
+               if (w.nextInPath == null)
+               {
+                  w.nextInPath = v;
+               }
                partiallyProcessedVerts.addLast(w);
                System.out.println("v: " + v.data + "  w: " + w.data);
                if (w.equals(endVert))
@@ -253,8 +247,10 @@ public class FHflowGraph<E>
          }
          System.out.println("current minCost: " + minCost);
          dst = dst.nextInPath; // next step up the path
+
          System.out.print("srs " + src.data + "  ");
          src.showResAdjList();
+
          if (src.equals(startVert))
          {
             System.out.println("limited flow: " + minCost);
@@ -265,7 +261,7 @@ public class FHflowGraph<E>
       return minCost;
    }
 
-   //todo: adjusting the residual and flow graphs
+   //adjusting the residual and flow graphs
    //flow edge += minCost
    //residual edge -= minCost
    //residual reverse edge += minCost

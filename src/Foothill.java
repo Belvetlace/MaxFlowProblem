@@ -30,7 +30,7 @@ public class Foothill
 
       finalFlow = myG.findMaxFlow();
 
-      System.out.println("Final flow: " + finalFlow);
+      System.out.println("\n\nFinal flow: " + finalFlow);
 
       myG.showResAdjTable();
       myG.showFlowAdjTable();
