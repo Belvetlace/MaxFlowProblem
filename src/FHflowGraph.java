@@ -241,7 +241,7 @@ public class FHflowGraph<E>
       FHflowVertex<E> src;
       minCost = Double.MAX_VALUE;
       //traverse the path util startVert is reached
-      System.out.println("startVert " + startVert.data);
+      System.out.println("in getLimitingFlowOnResPath----------\nstartVert " + startVert.data);
       startVert.showResAdjList();
       do
       {
@@ -266,12 +266,12 @@ public class FHflowGraph<E>
    }
 
    //todo: adjusting the residual and flow graphs
-   //flow += minCost
+   //flow edge += minCost
    //residual edge -= minCost
-   // reverse edge += minCost
+   //residual reverse edge += minCost
    private boolean adjustPathByCost(double cost)
    {
-      System.out.println("\nin adjustPathByCost");
+      System.out.println("\nin adjustPathByCost--------");
       FHflowVertex<E> src, w, dst = endVert;
       double currentCost;
       boolean result1, result2, result3;
@@ -287,6 +287,11 @@ public class FHflowGraph<E>
          result3 = addCostToFlowEdge(src, dst, currentCost + cost);
          dst = dst.nextInPath; // next step up the path
       } while (!src.equals(startVert));
+      //debugging:
+      showResAdjTable();
+      showFlowAdjTable();
+      System.out.println("out adjustPathByCost--------");
+
       return (result1 && result2 && result3);
    }
 
@@ -356,7 +361,6 @@ public class FHflowGraph<E>
       }
       return false;
    }
-
 
 }
 
