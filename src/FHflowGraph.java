@@ -245,13 +245,7 @@ public class FHflowGraph<E>
 
          if (TEST) System.out.print("srs " + src.data + "  ");
          if (TEST) src.showResAdjList();
-
-         if (src.equals(startVert))
-         {
-            if (TEST) System.out.println("limited flow: " + minCost + "\n");
-            return minCost;
-         }
-      } while (!src.equals(startVert)); // todo: change condition
+      } while (!src.equals(startVert));
 
       return minCost;
    }
