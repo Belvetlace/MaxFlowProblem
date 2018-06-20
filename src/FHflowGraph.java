@@ -16,32 +16,22 @@ public class FHflowGraph<E>
    //mutators
    public boolean setStartVert(E x)
    {
-      FHflowVertex<E> start, temp = new FHflowVertex<>(x);
-      Iterator<FHflowVertex<E>> iter;
-      for (iter = vertexSet.iterator(); iter.hasNext(); )
+      FHflowVertex<E> start = getVertexWithThisData(x);
+      if (start != null)
       {
-         start = iter.next();
-         if (start.equals(temp))
-         {
-            this.startVert = start;
-            return true;
-         }
+         this.startVert = start;
+         return true;
       }
       return false;
    }
 
    public boolean setEndVert(E x)
    {
-      FHflowVertex<E> end, temp = new FHflowVertex<>(x);
-      Iterator<FHflowVertex<E>> iter;
-      for (iter = vertexSet.iterator(); iter.hasNext(); )
+      FHflowVertex<E> end = getVertexWithThisData(x);
+      if (end != null)
       {
-         end = iter.next();
-         if (end.equals(temp))
-         {
-            this.endVert = end;
-            return true;
-         }
+         this.endVert = end;
+         return true;
       }
       return false;
    }
@@ -235,9 +225,13 @@ public class FHflowGraph<E>
       FHflowVertex<E> dst = endVert;
       FHflowVertex<E> src;
       minCost = Double.MAX_VALUE;
+      if (TEST)
+      {
+         System.out.println("\nin getLimitingFlowOnResPath----------" +
+                 "\nstartVert " + startVert.data);
+         startVert.showResAdjList();
+      }
       //traverse the path util startVert is reached
-      if (TEST) System.out.println("\nin getLimitingFlowOnResPath----------\nstartVert " + startVert.data);
-      if (TEST) startVert.showResAdjList();
       do
       {
          src = dst.nextInPath;
@@ -257,7 +251,7 @@ public class FHflowGraph<E>
             if (TEST) System.out.println("limited flow: " + minCost + "\n");
             return minCost;
          }
-      } while (!src.equals(startVert));
+      } while (!src.equals(startVert)); // todo: change condition
 
       return minCost;
    }
@@ -389,7 +383,6 @@ class FHflowVertex<E>
       this(null);
    }
 
-   // Modified or Added: addToFlowAdjList(), addToResAdjList()
    public void addToFlowAdjList(FHflowVertex<E> neighbor, double cost)
    {
       flowAdjList.add(new Pair<FHflowVertex<E>, Double>(neighbor, cost));
@@ -483,6 +476,5 @@ class FHflowVertex<E>
    {
       keyType = keyStack.pop();
    }
-
 
 }

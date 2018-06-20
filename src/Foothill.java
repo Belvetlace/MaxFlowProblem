@@ -13,7 +13,7 @@ public class Foothill
 
       for (int i = 1; i < 5; i++)
       {
-         System.out.println("###########  Test " + i + "  ###############");
+         System.out.println("\n###########  Test " + i + "  ###############");
          switch (i)
          {
             case 1:
@@ -108,7 +108,6 @@ public class Foothill
    public static void setGraph1(FHflowGraph<String> myG)
    {
       myG.clear();
-
       myG.addEdge("s","a", 3);
       myG.addEdge("s","b", 2);
       myG.addEdge("a","b", 1);
