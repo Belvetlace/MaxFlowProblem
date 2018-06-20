@@ -6,7 +6,7 @@ public class FHflowGraph<E>
 {
    protected HashSet<FHflowVertex<E>> vertexSet;
    private FHflowVertex<E> startVert, endVert;
-   private boolean TEST = false;
+   private boolean TEST = false; // for debugging
 
    public FHflowGraph()
    {
@@ -107,7 +107,6 @@ public class FHflowGraph<E>
       // build vertex with data = x for the search
       searchVert = new FHflowVertex<E>(x);
 
-
       // the vertex was already in the set, so get its ref
       for (iter = vertexSet.iterator(); iter.hasNext(); )
       {
@@ -192,22 +191,20 @@ public class FHflowGraph<E>
       while (!partiallyProcessedVerts.isEmpty())
       {
          v = partiallyProcessedVerts.removeFirst();
+         if (TEST) v.showResAdjList();
          // Ends the loop as soon as it finds a path to endVert.
          // skip edges with costVW == 0
-         if (TEST) v.showResAdjList();
          for (edgeIter = v.resAdjList.iterator(); edgeIter.hasNext(); )
          {
             edge = edgeIter.next();
             w = edge.first;
             costVW = edge.second;
-            if (costVW != .0)
+            if (costVW != .0 && w.nextInPath == null)
             {
-               if (w.nextInPath == null)
-               {
-                  w.nextInPath = v;
-                  partiallyProcessedVerts.addLast(w);
-               }
+               w.nextInPath = v;
+               partiallyProcessedVerts.addLast(w);
                if (TEST) System.out.println("v: " + v.data + "  w: " + w.data);
+
                if (w.equals(endVert))
                {
                   if (TEST) System.out.println("------end reached\n\n\n\n");
@@ -287,32 +284,25 @@ public class FHflowGraph<E>
    {
       Iterator<Pair<FHflowVertex<E>, Double>> iter;
       Pair<FHflowVertex<E>, Double> edge;
-      //iterate src resAdjList until dst vertex is found, get its cost
-      for (iter = src.resAdjList.iterator(); iter.hasNext(); )
+      iter = src.resAdjList.iterator();
+      do
       {
          edge = iter.next();
-         if (edge.first.equals(dst))
-         {
-            return edge.second;
-         }
-      }
-      return 0;
+      } while (iter.hasNext() && !edge.first.equals(dst));
+      return edge.second;
+
    }
 
    private double getCostOfFlowEdge(FHflowVertex<E> src, FHflowVertex<E> dst)
    {
       Iterator<Pair<FHflowVertex<E>, Double>> iter;
       Pair<FHflowVertex<E>, Double> edge;
-      //iterate src resAdjList until dst vertex is found, get its cost
-      for (iter = src.flowAdjList.iterator(); iter.hasNext(); )
+      iter = src.flowAdjList.iterator();
+      do
       {
          edge = iter.next();
-         if (edge.first.equals(dst))
-         {
-            return edge.second;
-         }
-      }
-      return 0;
+      } while (iter.hasNext() && !edge.first.equals(dst));
+      return edge.second;
    }
 
 
