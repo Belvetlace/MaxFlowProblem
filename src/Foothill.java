@@ -122,4 +122,192 @@ public class Foothill
 
 /* --------- output -----------
 
+###########  Test 1  ###############
+------------------------
+Adj Res List for a: b(1.0) s(0.0) c(3.0) d(4.0)
+Adj Res List for b: a(0.0) s(0.0) d(2.0)
+Adj Res List for s: a(3.0) b(2.0)
+Adj Res List for c: a(0.0) t(2.0)
+Adj Res List for d: a(0.0) b(0.0) t(3.0)
+Adj Res List for t: c(0.0) d(0.0)
+
+------------------------
+Adj Flow List for a: b(0.0) c(0.0) d(0.0)
+Adj Flow List for b: d(0.0)
+Adj Flow List for s: a(0.0) b(0.0)
+Adj Flow List for c: t(0.0)
+Adj Flow List for d: t(0.0)
+Adj Flow List for t:
+
+
+
+Final flow: 5.0
+------------------------
+Adj Res List for a: b(1.0) s(3.0) c(1.0) d(3.0)
+Adj Res List for b: a(0.0) s(2.0) d(0.0)
+Adj Res List for s: a(0.0) b(0.0)
+Adj Res List for c: a(2.0) t(0.0)
+Adj Res List for d: a(1.0) b(2.0) t(0.0)
+Adj Res List for t: c(2.0) d(3.0)
+
+------------------------
+Adj Flow List for a: b(0.0) c(2.0) d(1.0)
+Adj Flow List for b: d(2.0)
+Adj Flow List for s: a(3.0) b(2.0)
+Adj Flow List for c: t(2.0)
+Adj Flow List for d: t(3.0)
+Adj Flow List for t:
+
+
+###########  Test 2  ###############
+------------------------
+Adj Res List for a: b(1.0) s(0.0) c(2.0) d(4.0)
+Adj Res List for b: a(0.0) s(0.0) d(2.0)
+Adj Res List for s: a(4.0) b(2.0)
+Adj Res List for c: a(0.0) t(3.0)
+Adj Res List for d: a(0.0) b(0.0) t(3.0)
+Adj Res List for t: c(0.0) d(0.0)
+
+------------------------
+Adj Flow List for a: b(0.0) c(0.0) d(0.0)
+Adj Flow List for b: d(0.0)
+Adj Flow List for s: a(0.0) b(0.0)
+Adj Flow List for c: t(0.0)
+Adj Flow List for d: t(0.0)
+Adj Flow List for t:
+
+
+
+Final flow: 5.0
+------------------------
+Adj Res List for a: b(1.0) s(4.0) c(0.0) d(2.0)
+Adj Res List for b: a(0.0) s(1.0) d(1.0)
+Adj Res List for s: a(0.0) b(1.0)
+Adj Res List for c: a(2.0) t(1.0)
+Adj Res List for d: a(2.0) b(1.0) t(0.0)
+Adj Res List for t: c(2.0) d(3.0)
+
+------------------------
+Adj Flow List for a: b(0.0) c(2.0) d(2.0)
+Adj Flow List for b: d(1.0)
+Adj Flow List for s: a(4.0) b(1.0)
+Adj Flow List for c: t(2.0)
+Adj Flow List for d: t(3.0)
+Adj Flow List for t:
+
+
+###########  Test 3  ###############
+------------------------
+Adj Res List for A: B(2.0) s(0.0) D(0.0) E(2.0)
+Adj Res List for B: A(0.0) C(2.0)
+Adj Res List for s: A(1.0) D(4.0) G(6.0)
+Adj Res List for C: B(0.0) t(4.0) E(0.0) F(0.0)
+Adj Res List for D: A(3.0) s(0.0) E(3.0) G(0.0)
+Adj Res List for t: C(0.0) F(0.0) I(0.0)
+Adj Res List for E: A(0.0) C(2.0) D(0.0) F(3.0) G(0.0) H(0.0) I(3.0)
+Adj Res List for F: C(1.0) t(3.0) E(0.0) I(0.0)
+Adj Res List for G: s(0.0) D(2.0) E(1.0) H(6.0)
+Adj Res List for H: E(2.0) G(0.0) I(6.0)
+Adj Res List for I: t(4.0) E(0.0) F(1.0) H(0.0)
+
+------------------------
+Adj Flow List for A: B(0.0) E(0.0)
+Adj Flow List for B: C(0.0)
+Adj Flow List for s: A(0.0) D(0.0) G(0.0)
+Adj Flow List for C: t(0.0)
+Adj Flow List for D: A(0.0) E(0.0)
+Adj Flow List for t:
+Adj Flow List for E: C(0.0) F(0.0) I(0.0)
+Adj Flow List for F: C(0.0) t(0.0)
+Adj Flow List for G: D(0.0) E(0.0) H(0.0)
+Adj Flow List for H: E(0.0) I(0.0)
+Adj Flow List for I: t(0.0) F(0.0)
+
+
+
+Final flow: 11.0
+------------------------
+Adj Res List for A: B(0.0) s(1.0) D(1.0) E(2.0)
+Adj Res List for B: A(2.0) C(0.0)
+Adj Res List for s: A(0.0) D(0.0) G(0.0)
+Adj Res List for C: B(2.0) t(0.0) E(2.0) F(0.0)
+Adj Res List for D: A(2.0) s(4.0) E(0.0) G(0.0)
+Adj Res List for t: C(4.0) F(3.0) I(4.0)
+Adj Res List for E: A(0.0) C(0.0) D(3.0) F(0.0) G(1.0) H(1.0) I(3.0)
+Adj Res List for F: C(1.0) t(0.0) E(3.0) I(0.0)
+Adj Res List for G: s(6.0) D(2.0) E(0.0) H(1.0)
+Adj Res List for H: E(1.0) G(5.0) I(2.0)
+Adj Res List for I: t(0.0) E(0.0) F(1.0) H(4.0)
+
+------------------------
+Adj Flow List for A: B(2.0) E(0.0)
+Adj Flow List for B: C(2.0)
+Adj Flow List for s: A(1.0) D(4.0) G(6.0)
+Adj Flow List for C: t(4.0)
+Adj Flow List for D: A(1.0) E(3.0)
+Adj Flow List for t:
+Adj Flow List for E: C(2.0) F(3.0) I(0.0)
+Adj Flow List for F: C(0.0) t(3.0)
+Adj Flow List for G: D(0.0) E(1.0) H(5.0)
+Adj Flow List for H: E(1.0) I(4.0)
+Adj Flow List for I: t(4.0) F(0.0)
+
+
+###########  Test 4  ###############
+------------------------
+Adj Res List for a: b(5.0) s(0.0) e(5.0)
+Adj Res List for b: a(0.0) t(5.0) i(0.0)
+Adj Res List for s: a(5.0) c(5.0) d(5.0) h(5.0)
+Adj Res List for c: s(0.0) t(5.0) d(0.0)
+Adj Res List for d: s(0.0) c(5.0) g(5.0)
+Adj Res List for t: b(0.0) c(0.0) g(0.0) j(0.0)
+Adj Res List for e: a(0.0) j(5.0)
+Adj Res List for g: d(0.0) t(5.0)
+Adj Res List for h: s(0.0) i(5.0)
+Adj Res List for i: b(5.0) h(0.0)
+Adj Res List for j: t(5.0) e(0.0)
+
+------------------------
+Adj Flow List for a: b(0.0) e(0.0)
+Adj Flow List for b: t(0.0)
+Adj Flow List for s: a(0.0) c(0.0) d(0.0) h(0.0)
+Adj Flow List for c: t(0.0)
+Adj Flow List for d: c(0.0) g(0.0)
+Adj Flow List for t:
+Adj Flow List for e: j(0.0)
+Adj Flow List for g: t(0.0)
+Adj Flow List for h: i(0.0)
+Adj Flow List for i: b(0.0)
+Adj Flow List for j: t(0.0)
+
+
+
+Final flow: 20.0
+------------------------
+Adj Res List for a: b(5.0) s(5.0) e(0.0)
+Adj Res List for b: a(0.0) t(0.0) i(5.0)
+Adj Res List for s: a(0.0) c(0.0) d(0.0) h(0.0)
+Adj Res List for c: s(5.0) t(0.0) d(0.0)
+Adj Res List for d: s(5.0) c(5.0) g(0.0)
+Adj Res List for t: b(5.0) c(5.0) g(5.0) j(5.0)
+Adj Res List for e: a(5.0) j(0.0)
+Adj Res List for g: d(5.0) t(0.0)
+Adj Res List for h: s(5.0) i(0.0)
+Adj Res List for i: b(0.0) h(5.0)
+Adj Res List for j: t(0.0) e(5.0)
+
+------------------------
+Adj Flow List for a: b(5.0) e(5.0)
+Adj Flow List for b: t(5.0)
+Adj Flow List for s: a(5.0) c(5.0) d(5.0) h(5.0)
+Adj Flow List for c: t(5.0)
+Adj Flow List for d: c(0.0) g(5.0)
+Adj Flow List for t:
+Adj Flow List for e: j(5.0)
+Adj Flow List for g: t(5.0)
+Adj Flow List for h: i(5.0)
+Adj Flow List for i: b(5.0)
+Adj Flow List for j: t(5.0)
+
+
 */
