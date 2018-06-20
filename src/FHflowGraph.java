@@ -6,6 +6,7 @@ public class FHflowGraph<E>
 {
    protected HashSet<FHflowVertex<E>> vertexSet;
    private FHflowVertex<E> startVert, endVert;
+   private boolean TEST = false;
 
    public FHflowGraph()
    {
@@ -162,7 +163,7 @@ public class FHflowGraph<E>
       while (establishNextFlowPath())
       {
          minCost = getLimitingFlowOnResPath();
-         System.out.println("minCost " + minCost);
+         if (TEST) System.out.println("minCost " + minCost);
          adjustPathByCost(minCost);
       }
 
@@ -179,7 +180,7 @@ public class FHflowGraph<E>
    //dijkstra() is used as a basis
    private boolean establishNextFlowPath()
    {
-      System.out.println("\nin dijkstra--------------");
+      if (TEST) System.out.println("\nin dijkstra--------------");
       FHflowVertex<E> w, v;
       Pair<FHflowVertex<E>, Double> edge;
       Iterator<FHflowVertex<E>> iter;
@@ -191,10 +192,10 @@ public class FHflowGraph<E>
       for (iter = vertexSet.iterator(); iter.hasNext(); )
          iter.next().nextInPath = null;
 
+      if (TEST) System.out.println("startVert " + startVert.data);
+      if (TEST) System.out.println("endVert " + endVert.data);
+      if (TEST) startVert.showResAdjList();
 
-      System.out.println("startVert " + startVert.data);
-      System.out.println("endVert " + endVert.data);
-      //startVert.showResAdjList();
       partiallyProcessedVerts.addLast(startVert);
 
       // outer dijkstra loop
@@ -203,7 +204,7 @@ public class FHflowGraph<E>
          v = partiallyProcessedVerts.removeFirst();
          // Ends the loop as soon as it finds a path to endVert.
          // skip edges with costVW == 0
-         v.showResAdjList();
+         if (TEST) v.showResAdjList();
          for (edgeIter = v.resAdjList.iterator(); edgeIter.hasNext(); )
          {
             edge = edgeIter.next();
@@ -214,12 +215,12 @@ public class FHflowGraph<E>
                if (w.nextInPath == null)
                {
                   w.nextInPath = v;
+                  partiallyProcessedVerts.addLast(w);
                }
-               partiallyProcessedVerts.addLast(w);
-               System.out.println("v: " + v.data + "  w: " + w.data);
+               if (TEST) System.out.println("v: " + v.data + "  w: " + w.data);
                if (w.equals(endVert))
                {
-                  System.out.println("------end reached\n\n\n\n");
+                  if (TEST) System.out.println("------end reached\n\n\n\n");
                   return true;
                }
             }
@@ -235,8 +236,8 @@ public class FHflowGraph<E>
       FHflowVertex<E> src;
       minCost = Double.MAX_VALUE;
       //traverse the path util startVert is reached
-      System.out.println("in getLimitingFlowOnResPath----------\nstartVert " + startVert.data);
-      startVert.showResAdjList();
+      if (TEST) System.out.println("\nin getLimitingFlowOnResPath----------\nstartVert " + startVert.data);
+      if (TEST) startVert.showResAdjList();
       do
       {
          src = dst.nextInPath;
@@ -245,15 +246,15 @@ public class FHflowGraph<E>
          {
             minCost = currentCost;
          }
-         System.out.println("current minCost: " + minCost);
+         if (TEST) System.out.println("current minCost: " + minCost);
          dst = dst.nextInPath; // next step up the path
 
-         System.out.print("srs " + src.data + "  ");
-         src.showResAdjList();
+         if (TEST) System.out.print("srs " + src.data + "  ");
+         if (TEST) src.showResAdjList();
 
          if (src.equals(startVert))
          {
-            System.out.println("limited flow: " + minCost);
+            if (TEST) System.out.println("limited flow: " + minCost + "\n");
             return minCost;
          }
       } while (!src.equals(startVert));
@@ -267,7 +268,7 @@ public class FHflowGraph<E>
    //residual reverse edge += minCost
    private boolean adjustPathByCost(double cost)
    {
-      System.out.println("\nin adjustPathByCost--------");
+      if (TEST) System.out.println("\nin adjustPathByCost--------");
       FHflowVertex<E> src, w, dst = endVert;
       double currentCost;
       boolean result1, result2, result3;
@@ -284,9 +285,12 @@ public class FHflowGraph<E>
          dst = dst.nextInPath; // next step up the path
       } while (!src.equals(startVert));
       //debugging:
-      showResAdjTable();
-      showFlowAdjTable();
-      System.out.println("out adjustPathByCost--------");
+      if (TEST)
+      {
+         showResAdjTable();
+         showFlowAdjTable();
+         System.out.println("out adjustPathByCost--------");
+      }
 
       return (result1 && result2 && result3);
    }

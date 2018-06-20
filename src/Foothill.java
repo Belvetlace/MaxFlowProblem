@@ -9,8 +9,105 @@ public class Foothill
    {
       double finalFlow;
 
-      // build graph
       FHflowGraph<String> myG = new FHflowGraph<String>();
+
+      for (int i = 1; i < 5; i++)
+      {
+         System.out.println("###########  Test " + i + "  ###############");
+         switch (i)
+         {
+            case 1:
+               setGraph1(myG);
+               break;
+            case 2:
+               setGraph2(myG);
+               break;
+            case 3:
+               setGraph3(myG);
+               break;
+            case 4:
+               setGraph4(myG);
+               break;
+         }
+         // show the original flow graph
+         myG.showResAdjTable();
+         myG.showFlowAdjTable();
+
+         myG.setStartVert("s");
+         myG.setEndVert("t");
+
+         finalFlow = myG.findMaxFlow();
+
+         System.out.println("\n\nFinal flow: " + finalFlow);
+
+         myG.showResAdjTable();
+         myG.showFlowAdjTable();
+      }
+
+   }
+
+   public static void setGraph4(FHflowGraph<String> myG)
+   {
+      myG.clear();
+      myG.addEdge("s","h", 5);
+      myG.addEdge("h","i", 5);
+      myG.addEdge("i","b", 5);
+      myG.addEdge("a","b", 5);
+      myG.addEdge("s","a", 5);
+      myG.addEdge("s","c", 5);
+      myG.addEdge("s","d", 5);
+      myG.addEdge("a","e", 5);
+      myG.addEdge("e","j", 5);
+      myG.addEdge("j","t", 5);
+      myG.addEdge("d","g", 5);
+      myG.addEdge("g","t", 5);
+      myG.addEdge("b","t", 5);
+      myG.addEdge("c","t", 5);
+      myG.addEdge("d","c", 5);
+   }
+
+   public static void setGraph3(FHflowGraph<String> myG)
+   {
+      myG.clear();
+      myG.addEdge("s","A", 1);
+      myG.addEdge("s","D", 4);
+      myG.addEdge("s","G", 6);
+      myG.addEdge("A","B", 2);
+      myG.addEdge("A","E", 2);
+      myG.addEdge("B","C", 2);
+      myG.addEdge("C","t", 4);
+      myG.addEdge("D","E", 3);
+      myG.addEdge("D","A", 3);
+      myG.addEdge("E","C", 2);
+      myG.addEdge("E","F", 3);
+      myG.addEdge("E","I", 3);
+      myG.addEdge("F","C", 1);
+      myG.addEdge("F","t", 3);
+      myG.addEdge("G","D", 2);
+      myG.addEdge("G","E", 1);
+      myG.addEdge("G","H", 6);
+      myG.addEdge("H","E", 2);
+      myG.addEdge("H","I", 6);
+      myG.addEdge("I","F", 1);
+      myG.addEdge("I","t", 4);
+   }
+
+   public static void setGraph2(FHflowGraph<String> myG)
+   {
+      myG.clear();
+      myG.addEdge("s","a", 4);
+      myG.addEdge("s","b", 2);
+      myG.addEdge("a","b", 1);
+      myG.addEdge("a","c", 2);
+      myG.addEdge("a","d", 4);
+      myG.addEdge("b","d", 2);
+      myG.addEdge("c","t", 3);
+      myG.addEdge("d","t", 3);
+   }
+
+   public static void setGraph1(FHflowGraph<String> myG)
+   {
+      myG.clear();
 
       myG.addEdge("s","a", 3);
       myG.addEdge("s","b", 2);
@@ -20,55 +117,10 @@ public class Foothill
       myG.addEdge("b","d", 2);
       myG.addEdge("c","t", 2);
       myG.addEdge("d","t", 3);
-
-      // show the original flow graph
-      myG.showResAdjTable();
-      myG.showFlowAdjTable();
-
-      myG.setStartVert("s");
-      myG.setEndVert("t");
-
-      finalFlow = myG.findMaxFlow();
-
-      System.out.println("\n\nFinal flow: " + finalFlow);
-
-      myG.showResAdjTable();
-      myG.showFlowAdjTable();
    }
 }
 
 
 /* --------- output -----------
------------------------- 
-Adj Res List for d: t(3.0) b(0.0) a(0.0) 
-Adj Res List for t: d(0.0) c(0.0) 
-Adj Res List for b: d(2.0) s(0.0) a(0.0) 
-Adj Res List for s: b(2.0) a(3.0) 
-Adj Res List for c: t(2.0) a(0.0) 
-Adj Res List for a: d(4.0) b(1.0) s(0.0) c(3.0) 
 
------------------------- 
-Adj Flow List for d: t(0.0) 
-Adj Flow List for t: 
-Adj Flow List for b: d(0.0) 
-Adj Flow List for s: b(0.0) a(0.0) 
-Adj Flow List for c: t(0.0) 
-Adj Flow List for a: d(0.0) b(0.0) c(0.0) 
-
-Final flow: 5.0
------------------------- 
-Adj Res List for d: t(0.0) b(2.0) a(1.0) 
-Adj Res List for t: d(3.0) c(2.0) 
-Adj Res List for b: d(0.0) s(2.0) a(0.0) 
-Adj Res List for s: b(0.0) a(0.0) 
-Adj Res List for c: t(0.0) a(2.0) 
-Adj Res List for a: d(3.0) b(1.0) s(3.0) c(1.0) 
-
------------------------- 
-Adj Flow List for d: t(3.0) 
-Adj Flow List for t: 
-Adj Flow List for b: d(2.0) 
-Adj Flow List for s: b(2.0) a(3.0) 
-Adj Flow List for c: t(2.0) 
-Adj Flow List for a: d(1.0) b(0.0) c(2.0)
 */
